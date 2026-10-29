@@ -3,9 +3,15 @@ Sway dotfiles that just works
 
 # Xubuntu + Sway Desktop
 
-A customized Sway desktop built on Xubuntu, combining tiling window management with familiar XFCE applications and graphical configuration tools.
+## Philosophy
 
-The goal is a tiling traditional desktop environment that just works. The regular XFCE session remains available as an alternative.
+The goal is a traditional desktop experience with tiling window management that just works. The regular XFCE session remains available as an alternative.
+
+**If something doesn't work the way you want, script around it, configure it, or replace it, right away, instead of waiting for a bug fix.**
+
+SwayCrap combines Sway with familiar XFCE utilities and lightweight, independent components. Rather than relying on one large desktop shell, individual parts can be customized or replaced without changing the entire environment.
+
+The idea is to keep the desktop simple, flexible, and easy to maintain—not necessarily to have the fewest packages installed.
 
 ![Desktop](Screenshots/terminals.png)
 
