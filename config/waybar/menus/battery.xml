@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <object class="GtkMenu" id="menu">
+
+    <child>
+      <object class="GtkMenuItem" id="power-settings">
+        <property name="label">Power Settings</property>
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkSeparatorMenuItem" id="sep1"/>
+    </child>
+
+    <child>
+      <object class="GtkMenuItem" id="power-profile-performance">
+        <property name="label">Power Profile: Performance</property>
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkMenuItem" id="power-profile-balanced">
+        <property name="label">Power Profile: Balanced</property>
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkMenuItem" id="power-profile-saver">
+        <property name="label">Power Profile: Power Saver</property>
+      </object>
+    </child>
+
+  </object>
+</interface>

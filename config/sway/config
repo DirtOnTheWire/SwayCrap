@@ -1,0 +1,880 @@
+# Sway configuration.
+# Load generated theme variables + client/bar colors
+include ~/.config/sway/themes/current.conf
+
+
+# Rounded windows
+#corner_radius 8
+
+# Soft drop shadows
+#shadows enable
+#shadows_on_csd enable
+#shadow_blur_radius 28
+#shadow_color #000000B8
+#shadow_inactive_color #000000B8
+#shadow_offset 0 6
+
+# Fast, subtle motion
+#animation_duration_ms 150
+
+
+# All regular mice / external pointer devices
+input "type:pointer" {
+    accel_profile flat
+    pointer_accel 0
+    natural_scroll disabled
+    left_handed disabled
+    middle_emulation disabled
+}
+
+# All trackpoints / pointing sticks
+#input "type:trackpoint" {
+#    accel_profile flat
+#    pointer_accel 1
+#    natural_scroll disabled
+#    middle_emulation enabled
+#}
+
+# All touchpads / trackpads
+#input "type:touchpad" {
+#    tap enabled
+#    natural_scroll enabled
+#    dwt enabled
+#    middle_emulation enabled
+#    pointer_accel 0
+#    accel_profile adaptive
+#}
+
+# All keyboards
+input "type:keyboard" {
+    xkb_layout us
+    xkb_variant ""
+    xkb_options ctrl:nocaps
+    xkb_numlock enabled
+    repeat_delay 300
+    repeat_rate 40
+}
+
+xwayland enable
+
+
+set $mod Mod4
+set $mod2 --whole-window --border button8
+#set $mod2 mod2
+
+#extra settings
+
+focus_follows_mouse no
+
+font pango:monospace 8
+
+
+
+# ============================================================
+# Autostart Applications
+# Session services, panels, notifications, and desktop utilities.
+# ============================================================
+
+# ------------------------------------------------------------
+# Session Environment
+# Export session variables for systemd and D-Bus services.
+# ------------------------------------------------------------
+
+exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP XDG_SESSION_TYPE DBUS_SESSION_BUS_ADDRESS
+exec dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP XDG_SESSION_TYPE DBUS_SESSION_BUS_ADDRESS
+
+# ------------------------------------------------------------
+# Network and Notifications
+# NetworkManager tray and Sway Notification Center.
+# ------------------------------------------------------------
+
+exec --no-startup-id nm-applet --indicator
+exec_always pkill xfce4-notifyd
+exec_always --no-startup-id sh -c 'pkill -x swaync 2>/dev/null; sleep 0.2; swaync'
+
+# Notification history monitor.
+exec histuid --monitor
+
+# ------------------------------------------------------------
+# Panel and System Statistics
+# Waybar and its background statistics helper.
+# ------------------------------------------------------------
+
+# Noctalia alternative: handles output hotplug itself.
+#exec --no-startup-id noctalia --daemon
+
+exec --no-startup-id ~/.config/waybar/launch.sh
+
+# ------------------------------------------------------------
+# Audio Tray and On-Screen Display
+# ------------------------------------------------------------
+
+# Optional legacy audio tray.
+#exec --no-startup-id pasystray
+
+# Alternative SwayOSD startup.
+#exec sh -c 'sleep 10; exec swayosd-server'
+exec ~/.config/sway/scripts/start-swayosd.sh
+
+# ------------------------------------------------------------
+# Clipboard Manager
+# ------------------------------------------------------------
+
+exec_always --no-startup-id sh -lc 'copyq exit 2>/dev/null || true; pkill -x copyq 2>/dev/null || true; copyq --start-server'
+
+# ------------------------------------------------------------
+# Power Management and Locking
+# XFCE handles power management; Sway lock hook is optional.
+# ------------------------------------------------------------
+
+exec_always --no-startup-id xfce4-power-manager --daemon
+
+# Disable presentation mode at session startup/reload.
+exec_always --no-startup-id sh -c 'xfconf-query -c xfce4-power-manager -p /xfce4-power-manager/presentation-mode -s false || xfconf-query -c xfce4-power-manager -p /xfce4-power-manager/presentation-mode -n -t bool -s false'
+
+# Optional Sway idle/sleep locking (currently disabled).
+#exec --no-startup-id swayidle -w \
+#before-sleep "$HOME/.config/sway/scripts/lock.sh"
+
+# ------------------------------------------------------------
+# Wallpaper
+# ------------------------------------------------------------
+
+exec_always --no-startup-id swaybg -i ~/Pictures/Wallpapers/Blue_Lightcycle.png -m fill
+
+# ------------------------------------------------------------
+# Bluetooth and XFCE Appearance
+# ------------------------------------------------------------
+
+exec --no-startup-id blueman-applet
+exec --no-startup-id xfsettingsd
+
+
+# ============================================================
+# PolicyKit Authentication Agent
+# Enable ONE authentication agent at a time.
+# ============================================================
+
+# XFCE Polkit
+#exec --no-startup-id xfce-polkit
+
+# MATE Polkit
+exec --no-startup-id /usr/libexec/polkit-mate-authentication-agent-1
+
+# GNOME Polkit
+#exec --no-startup-id /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1
+
+
+
+# ============================================================
+# Application Launchers
+# Wofi and dmenu, including disabled alternatives.
+# ============================================================
+
+bindsym $mod+z exec wofi --show drun
+#bindsym $mod+z exec sh -lc 'pkill -x dmenu 2>/dev/null || true; morc_menu'
+#bindsym $mod+z exec ~/morc_menu/morc_menu
+bindsym $mod+d exec dmenu_run
+#bindsym $mod+d exec bemenu-run -b -i
+#bindsym $mod+d exec fuzzel
+
+# ------------------------------------------------------------
+# Window Gaps
+# ------------------------------------------------------------
+
+bindsym $mod+g gaps inner current toggle 24, gaps outer current toggle 6
+
+# ------------------------------------------------------------
+# Theme Picker
+# ------------------------------------------------------------
+
+bindsym $mod+t exec --no-startup-id foot --app-id themectl-fzf --title "themectl-fzf" -W 90x22 "$HOME/.config/sway/scripts/theme-engine.sh" menu
+
+# ------------------------------------------------------------
+# Clipboard Shortcuts
+# Disabled clipboard picker and history alternatives.
+# ------------------------------------------------------------
+
+#bindsym $mod+c exec --no-startup-id cliphist list | bemenu -b -p "Clipboard" | cliphist decode | wl-copy
+#bindsym $mod+c exec --no-startup-id cliphist list | wofi --dmenu --prompt "Clipboard" | cliphist decode | wl-copy
+#bindsym $mod+c exec --no-startup-id cliphist list | fuzzel --dmenu --prompt "Clipboard" | cliphist decode | wl-copy
+#bindsym $mod+c exec --no-startup-id copyq show
+#bindsym $mod+Shift+v exec --no-startup-id cliphist wipe
+
+# ------------------------------------------------------------
+# System Monitor and Notifications
+# ------------------------------------------------------------
+
+#bindsym $mod+Shift+c exec --no-startup-id sh -c 'if pgrep -x conky >/dev/null; then pkill -x conky; else conky -c ~/.config/conky/popup.conf; fi'
+#bindsym $mod+Shift+c scratchpad show
+bindsym $mod+n exec --no-startup-id swaync-client -t -sw
+
+
+# ============================================================
+# Screenshot Mode
+# Super+Print opens the screenshot selection mode.
+# ============================================================
+
+set $screenshot_dir $HOME/Pictures
+set $mode_screenshot (1) Area, (2) Active window, (3) Full screen
+bindsym $mod+Print mode "$mode_screenshot"
+mode "$mode_screenshot" {
+    bindsym 1 exec --no-startup-id "$HOME/.config/sway/scripts/screenshot.sh area \"$screenshot_dir\""; mode "default"
+    bindsym 2 exec --no-startup-id "$HOME/.config/sway/scripts/screenshot.sh window \"$screenshot_dir\""; mode "default"
+    bindsym 3 exec --no-startup-id "$HOME/.config/sway/scripts/screenshot.sh screen \"$screenshot_dir\""; mode "default"
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+# ============================================================
+# Application Menu Modes
+# Super+Q opens the application and system menus.
+# ============================================================
+
+#bindsym $mod+F12 exec synaptic-pkexec
+set $mode_system (1) General apps, (2) Games, (3) Macros, (4) System, (9) Power
+set $General_apps (1) Firefox, (2) FileMan, (3) Calculator, (4) TaskMan
+set $Games (1) ScreenCap, (2) Steam.sh
+set $System (1) Synaptic, (2) Settings, (3) Displays
+set $Power (59) Shutdown, (6) Restart, (7) Logout (8) Suspend, (9) Lock
+set $Displays (1) Home
+set $Macros (1) Empty
+bindsym $mod+q mode "$mode_system"
+
+# ------------------------------------------------------------
+# Main Menu
+# ------------------------------------------------------------
+
+mode "$mode_system" {
+    bindsym 1 mode "$General_apps"
+    bindsym 2 mode "$Games"
+    bindsym 3 mode "$Macros"
+    bindsym 4 mode "$System"
+    bindsym 9 mode "$Power"
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+# ------------------------------------------------------------
+# General Applications
+# ------------------------------------------------------------
+
+mode "$General_apps" {
+    bindsym 1 exec firefox, mode "default"
+    bindsym 2 exec thunar, mode "default"
+    bindsym 3 exec gnome-calculator, mode "default"
+    bindsym 4 exec --no-startup-id xfce4-taskmanager, mode "default"
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+# ------------------------------------------------------------
+# Games
+# ------------------------------------------------------------
+
+mode "$Games" {
+    bindsym 1 exec --no-startup-id obs, mode "default"
+    bindsym 2 exec --no-startup-id steam, mode "default"
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+# ------------------------------------------------------------
+# System Utilities
+# ------------------------------------------------------------
+
+mode "$System" {
+    #bindsym 1 exec --no-startup-id synaptic-pkexec, mode "default"
+    bindsym 1 exec --no-startup-id ~/.config/sway/scripts/synaptic-sway.sh, mode "default"
+    bindsym 2 exec --no-startup-id xfce4-settings-manager, mode "default"
+    bindsym 3 exec --no-startup-id xfce4-display-settings, mode "default"
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+# ------------------------------------------------------------
+# Power and Session Controls
+# ------------------------------------------------------------
+
+mode "$Power" {
+    bindsym 5 exec systemctl poweroff, mode "default"
+    bindsym 6 exec systemctl reboot, mode "default"
+    bindsym 7 exec swaymsg exit, mode "default"
+    bindsym 8 exec systemctl suspend, mode "default"
+    bindsym 9 exec "$HOME/.config/sway/scripts/lock.sh", mode "default"
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+# ------------------------------------------------------------
+# Macros
+# ------------------------------------------------------------
+
+mode "$Macros" {
+    bindsym 1 mode "default"
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+# ------------------------------------------------------------
+# Desktop Help
+# ------------------------------------------------------------
+
+bindsym $mod+F1 exec foot --app-id sway-help -W 70x28 sh -c 'less -R "$HOME/.config/sway/help.txt"'
+
+# ============================================================
+# Audio Controls
+# ============================================================
+
+
+# ============================================================
+# Audio Controls - PipeWire / WirePlumber + SwayOSD
+# wpctl handles volume independently of SwayOSD.
+# ============================================================
+
+# ------------------------------------------------------------
+# Multimedia Keyboard Volume Keys
+# ------------------------------------------------------------
+
+bindsym XF86AudioRaiseVolume exec sh -c 'wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%+; timeout 1s swayosd-client --output-volume +0 >/dev/null 2>&1 || true'
+bindsym XF86AudioLowerVolume exec sh -c 'wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-; timeout 1s swayosd-client --output-volume +0 >/dev/null 2>&1 || true'
+bindsym XF86AudioMute exec sh -c 'wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle; timeout 1s swayosd-client --output-volume +0 >/dev/null 2>&1 || true'
+
+# ------------------------------------------------------------
+# Super Key Volume Controls
+# ------------------------------------------------------------
+
+bindsym $mod+equal exec sh -c 'wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%+; timeout 1s swayosd-client --output-volume +0 >/dev/null 2>&1 || true'
+bindsym $mod+minus exec sh -c 'wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-; timeout 1s swayosd-client --output-volume +0 >/dev/null 2>&1 || true'
+bindsym $mod+BackSpace exec sh -c 'wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle; timeout 1s swayosd-client --output-volume +0 >/dev/null 2>&1 || true'
+
+# ------------------------------------------------------------
+# Mouse Wheel Volume Controls
+# ------------------------------------------------------------
+
+bindsym --whole-window $mod+button4 exec sh -c 'wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%+; timeout 1s swayosd-client --output-volume +0 >/dev/null 2>&1 || true'
+bindsym --whole-window $mod+button5 exec sh -c 'wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-; timeout 1s swayosd-client --output-volume +0 >/dev/null 2>&1 || true'
+
+
+# ============================================================
+# Audio Controls - PulseAudio Fallback (Disabled)
+# For older systems using PulseAudio instead of PipeWire/wpctl.
+# Disable the active PipeWire bindings before enabling these.
+# pactl controls volume directly; no SwayOSD server is required.
+# ============================================================
+
+# ------------------------------------------------------------
+# Multimedia Keyboard Volume Keys
+# ------------------------------------------------------------
+
+#bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+#bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+#bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+
+# ------------------------------------------------------------
+# Super Key Volume Controls
+# ------------------------------------------------------------
+
+#bindsym $mod+equal exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+#bindsym $mod+minus exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+#bindsym $mod+BackSpace exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+
+# ------------------------------------------------------------
+# Mouse Wheel Volume Controls
+# ------------------------------------------------------------
+
+#bindsym --whole-window $mod+button4 exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+#bindsym --whole-window $mod+button5 exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+
+# ------------------------------------------------------------
+# Screen Brightness
+# ------------------------------------------------------------
+
+bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +10%
+bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 10%-
+
+# ------------------------------------------------------------
+# Keyboard Backlight
+# Optional disabled bindings.
+# ------------------------------------------------------------
+
+#bindsym XF86KbdBrightnessUp exec brightnessctl --device='*kbd_backlight*' set +1
+#bindsym XF86KbdBrightnessDown exec brightnessctl --device='*kbd_backlight*' set 1-
+
+# ------------------------------------------------------------
+# Touchpad Controls
+# Optional disabled binding.
+# ------------------------------------------------------------
+
+#bindsym XF86TouchpadToggle exec /some/path/toggletouchpad.sh # toggle touchpad
+
+# ------------------------------------------------------------
+# Media Playback
+# ------------------------------------------------------------
+
+bindsym XF86AudioPlay exec playerctl play-pause
+bindsym XF86AudioPause exec playerctl play-pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
+
+# ============================================================
+# Workspace Movement Between Outputs
+# ============================================================
+
+bindsym $mod+control+Up move workspace to output up
+bindsym $mod+control+Down move workspace to output down
+bindsym $mod+control+Left move workspace to output left
+bindsym $mod+control+Right move workspace to output right
+
+# ------------------------------------------------------------
+# Window Borders
+# ------------------------------------------------------------
+
+#bindsym $mod+i border normal 2
+#bindsym $mod+o border none
+bindsym $mod+i [workspace="__focused__"] border pixel 1
+bindsym $mod+o [workspace="__focused__"] border normal 2
+
+# ------------------------------------------------------------
+# Waybar Visibility
+# ------------------------------------------------------------
+
+bindsym $mod+m exec pkill -USR1 -x waybar
+#bindsym $mod+m bar mode toggle
+#bindsym $mod+m exec noctalia msg bar-toggle default
+#bindsym $mod+n exec noctalia msg bar-toggle stats
+
+# ------------------------------------------------------------
+# Lock Screen Alternatives
+# Disabled shortcuts; power menu also provides locking.
+# ------------------------------------------------------------
+
+#bindsym $mod+9 exec --no-startup-id blurlock
+#bindsym $mod+Shift+x exec ~/.config/sway/scripts/lock.sh
+
+# WINDERRS placement
+### Window rules for sway
+
+# here is a terminal string to find all the window ids
+# remove the "#" and paste it into the terminal
+
+#swaymsg -t get_tree | jq -r '
+#  recurse(.nodes[]?, .floating_nodes[]?)
+#  | select(.type? == "con")
+#  | "name=\(.name // "") app_id=\(.app_id // "") class=\(.window_properties.class // "") instance=\(.window_properties.instance // "") floating=\(.floating // "") focused=\(.focused)"
+#'
+
+
+# ============================================================
+# Workspace assignments
+# ============================================================
+
+# Steam / Wine-related windows
+assign [class="steam"] workspace number 2
+
+# Float GTK portal file chooser, used by Steam and sandboxed apps
+for_window [app_id="xdg-desktop-portal-gtk"] floating enable, move position center
+
+# Misc app placement
+#assign [title="PlayOnLinux"] workspace number 4
+assign [app_id="thunar"] workspace number 9
+#assign [class="Unreal"] workspace number 1
+
+# Terminals
+# Normal xfce4-terminal windows go to workspace 10,
+# but the themectl-fzf helper terminal is excluded.
+assign [app_id="xfce4-terminal" title="^(?!themectl-fzf$).*"] workspace number 10
+assign [class="^Terminal$"] workspace number 10
+
+# Browsers
+assign [app_id="firefox"] workspace number 3
+assign [app_id="chromium"] workspace number 3
+assign [app_id="google-chrome"] workspace number 3
+
+# Chat / comms
+assign [class="Mumble"] workspace number 5
+assign [class="TeamSpeak 3"] workspace number 5
+assign [class="Hexchat"] workspace number 6
+assign [app_id="discord"] workspace number 6
+
+# Video / media
+assign [class="vlc"] workspace number 4
+assign [app_id="parole"] workspace number 4
+assign [app_id="org.gnome.Rhythmbox3"] workspace number 4
+assign [title="^media$"] workspace number 4
+
+# Games
+#assign [class="hl2_linux"] workspace number 1
+#assign [class="dota_linux"] workspace number 1
+
+# ============================================================
+# Floating / special window rules
+# ============================================================
+
+# ------------------------------------------------------------
+# F1 help menu
+# ------------------------------------------------------------
+
+for_window [app_id="sway-help"] floating enable, resize set 760 600, move position center
+
+# ------------------------------------------------------------
+# Generic dialog-style windows
+# Useful for many XWayland/legacy popups without targeting full apps.
+# ------------------------------------------------------------
+
+for_window [window_role="pop-up"] floating enable
+for_window [window_role="bubble"] floating enable
+for_window [window_role="dialog"] floating enable
+for_window [window_type="dialog"] floating enable
+for_window [window_type="utility"] floating enable
+for_window [window_type="toolbar"] floating enable
+for_window [window_type="splash"] floating enable
+
+# ------------------------------------------------------------
+# File operation / progress dialogs
+# ------------------------------------------------------------
+
+#lxqt file picker
+for_window [app_id="xdg-desktop-portal-lxqt"] floating enable, move position center
+
+#cosmic file picker
+for_window [app_id="^com\.system76\.CosmicFilesDialog$"] floating enable, move position center
+
+# Thunar single-file / bulk rename dialogs
+for_window [app_id="thunar" title="(?i).*(rename|bulk rename|rename file|file rename).*"] floating enable
+for_window [class="Thunar" title="(?i).*(rename|bulk rename|rename file|file rename).*"] floating enable
+
+# Generic rename dialogs from GTK/XWayland apps
+for_window [title="(?i).*(rename|bulk rename|rename file|file rename).*"] floating enable
+
+for_window [title="(?i).*(file transfer|file operation|copying|moving|progress).*"] floating enable
+for_window [app_id="thunar" title="(?i).*(file operation|file transfer|copying|moving|deleting|trash|progress|preparing).*"] floating enable
+for_window [class="Thunar" title="(?i).*(file operation|file transfer|copying|moving|deleting|trash|progress|preparing).*"] floating enable
+
+# Thunar "replace existing files?" dialog
+for_window [app_id="^thunar$" title="(?i).*replace files.*"] floating enable
+
+# Engrampa archive/compression progress dialogs
+for_window [app_id="engrampa" title="(?i).*(compress|compression|extract|extraction|archive|progress|creating|adding).*"] floating enable
+for_window [class="Engrampa" title="(?i).*(compress|compression|extract|extraction|archive|progress|creating|adding).*"] floating enable
+
+# to make all engrampa windows float
+#for_window [app_id="engrampa" window_type="dialog"] floating enable
+#for_window [class="Engrampa" window_type="dialog"] floating enable
+
+# ------------------------------------------------------------
+# XFCE settings panels
+# ------------------------------------------------------------
+
+# Broad catch-all for most XFCE settings windows
+for_window [app_id="(?i).*xfce.*settings.*"] floating enable
+for_window [class="(?i).*xfce.*settings.*"] floating enable
+
+# Main settings manager
+for_window [app_id="xfce4-settings-manager"] floating enable
+for_window [class="Xfce4-settings-manager"] floating enable
+for_window [title="(?i).*settings manager.*"] floating enable
+
+# Display settings
+for_window [app_id="xfce4-display-settings"] floating enable
+for_window [class="Xfce4-display-settings"] floating enable
+for_window [title="(?i).*display.*settings.*"] floating enable
+
+# XFWM settings tools, often launched from the XFCE settings manager
+for_window [app_id="xfwm4-settings"] floating enable
+for_window [app_id="xfwm4-tweaks-settings"] floating enable
+for_window [app_id="xfwm4-workspace-settings"] floating enable
+
+
+# More XFCE settings panels / tools launched from Settings Manager
+
+# Panel Profiles
+for_window [app_id="xfce4-panel-profiles"] floating enable
+for_window [class="Xfce4-panel-profiles"] floating enable
+for_window [title="(?i).*panel profiles.*"] floating enable
+
+#Panel Settings
+for_window [title="(?i).*panel Preferences.*"] floating enable
+for_window [app_id="^xfce4-panel$" title="(?i).*add new items.*"] floating enable
+
+#Panel Widgets
+for_window [app_id="^xfce4-panel$" title="(?i).*system load monitor.*"] floating enable
+
+# Desktop settings
+for_window [app_id="xfdesktop-settings"] floating enable
+for_window [class="Xfdesktop-settings"] floating enable
+for_window [title="(?i).*desktop.*"] floating enable
+
+# Kvantum Manager
+for_window [app_id="kvantummanager"] floating enable
+for_window [class="kvantummanager"] floating enable
+for_window [class="Kvantum Manager"] floating enable
+for_window [title="(?i).*kvantum.*"] floating enable
+
+# XFCE Notifications
+for_window [app_id="xfce4-notifyd-config"] floating enable
+for_window [class="Xfce4-notifyd-config"] floating enable
+for_window [title="(?i).*notifications.*"] floating enable
+
+# About XFCE
+for_window [app_id="xfce4-about"] floating enable
+for_window [class="Xfce4-about"] floating enable
+for_window [title="(?i).*about xfce.*"] floating enable
+
+# ------------------------------------------------------------
+# Terminal helper windows
+# ------------------------------------------------------------
+
+for_window [title="^alsamixer$"] floating enable
+for_window [title="^themectl-fzf$"] floating enable, resize set 300 520, move position center, move to workspace current, focus
+for_window [app_id="histui"] floating enable
+
+
+# ------------------------------------------------------------
+# Text editor helper windows
+# ------------------------------------------------------------
+# Xed / Geany dialogs only
+for_window [app_id="xed" window_type="dialog"] floating enable
+for_window [class="Xed" window_type="dialog"] floating enable
+
+# Geany dialogs only
+for_window [app_id="geany" window_type="dialog"] floating enable
+for_window [class="Geany" window_type="dialog"] floating enable
+
+# Pluma dialogs only
+for_window [app_id="pluma" window_type="dialog"] floating enable
+for_window [class="Pluma" window_type="dialog"] floating enable
+
+# ------------------------------------------------------------
+# Audio / power utility windows
+# ------------------------------------------------------------
+
+for_window [app_id="pavucontrol"] floating enable
+for_window [class="Pavucontrol"] floating enable
+for_window [title="(?i).*volume control.*"] floating enable
+
+for_window [app_id="xfce4-power-manager-settings"] floating enable
+for_window [class="Xfce4-power-manager-settings"] floating enable
+for_window [title="(?i).*power manager.*"] floating enable
+
+for_window [app_id="com.github.d4nj1.tlpui"] floating enable
+for_window [title="(?i).*tlp.*ui.*"] floating enable
+
+# ------------------------------------------------------------
+# Appearance / settings tools
+# ------------------------------------------------------------
+
+for_window [app_id="lxappearance"] floating enable
+for_window [class="Lxappearance"] floating enable
+
+for_window [class="Lightdm-gtk-greeter-settings"] floating enable
+for_window [class="Timeset-gui"] floating enable
+
+for_window [class="Qtconfig-qt4"] floating enable
+for_window [class="qt5ct"] floating enable
+for_window [app_id="qt5ct"] floating enable
+for_window [app_id="qt6ct"] floating enable
+
+# nwg-displays
+for_window [app_id="nwg-displays"] floating enable
+
+# ------------------------------------------------------------
+# Installers / admin tools
+# ------------------------------------------------------------
+
+for_window [class="Calamares"] floating enable
+
+
+for_window [app_id="gparted"] floating enable
+for_window [class="GParted"] floating enable
+
+for_window [class="(?i)system-config-printer.py"] floating enable
+for_window [title="(?i).*printer.*"] floating enable
+
+for_window [app_id="xfce-polkit"] floating enable
+
+# ------------------------------------------------------------
+# Random utility apps
+# ------------------------------------------------------------
+
+for_window [app_id="galculator"] floating enable
+for_window [class="Galculator"] floating enable
+
+for_window [app_id="org.gnome.SimpleScan"] floating enable
+for_window [app_id="simple-scan"] floating enable
+for_window [class="Simple-scan"] floating enable
+
+for_window [app_id="xfburn"] floating enable
+for_window [class="Xfburn"] floating enable
+
+
+# ------------------------------------------------------------
+# App-specific popups
+# ------------------------------------------------------------
+
+for_window [title="^PlayOnLinux$"] floating enable
+for_window [class="PlayOnLinux"] floating enable
+
+# Steam settings / preferences
+for_window [class="steam" title="(?i).*(settings|preferences).*"] floating enable
+for_window [class="Steam" title="(?i).*(settings|preferences).*"] floating enable
+for_window [app_id="steam" title="(?i).*(settings|preferences).*"] floating enable
+
+for_window [title="^(sway_help|sway_help)$"] floating enable, sticky enable
+for_window [title="^MuseScore: Play Panel$"] floating enable
+for_window [title="^About Pale Moon$"] floating enable
+
+# ------------------------------------------------------------
+# CopyQ
+# ------------------------------------------------------------
+
+for_window [app_id="copyq"] floating enable
+
+# ------------------------------------------------------------
+# VirtualBox
+# ------------------------------------------------------------
+
+for_window [class="(?i)virtualbox"] floating enable
+for_window [app_id="(?i)virtualbox"] floating enable
+
+# ------------------------------------------------------------
+# Calenders
+# ------------------------------------------------------------
+
+for_window [app_id="waybar-calendar-popup"] floating enable
+
+
+# ------------------------------------------------------------
+# Bluetooth
+# ------------------------------------------------------------
+
+for_window [app_id="blueman-manager"] floating enable
+
+
+
+
+# ============================================================
+# Window Management Keybindings
+# ============================================================
+
+floating_modifier $mod
+
+# ------------------------------------------------------------
+# Terminal and Close Window
+# ------------------------------------------------------------
+
+#bindsym $mod+Return exec xfce4-terminal
+bindsym $mod+Return exec foot
+bindsym $mod+Shift+q kill
+
+# ------------------------------------------------------------
+# Focus Windows
+# ------------------------------------------------------------
+
+bindsym $mod+j focus left
+bindsym $mod+k focus down
+bindsym $mod+l focus up
+bindsym $mod+semicolon focus right
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# ------------------------------------------------------------
+# Move Windows
+# ------------------------------------------------------------
+
+bindsym $mod+Shift+j move left
+bindsym $mod+Shift+k move down
+bindsym $mod+Shift+l move up
+bindsym $mod+Shift+semicolon move right
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# ------------------------------------------------------------
+# Split Orientation
+# ------------------------------------------------------------
+
+bindsym $mod+h split h
+bindsym $mod+v split v
+
+# ------------------------------------------------------------
+# Fullscreen and Layouts
+# ------------------------------------------------------------
+
+bindsym $mod+f fullscreen toggle
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# ------------------------------------------------------------
+# Floating Windows
+# ------------------------------------------------------------
+
+bindsym $mod+Shift+space floating toggle
+bindsym $mod+space focus mode_toggle
+
+# ------------------------------------------------------------
+# Focus Parent / Child
+# ------------------------------------------------------------
+
+bindsym $mod+a focus parent
+#bindsym $mod+d focus child
+
+# ============================================================
+# Switch Workspaces
+# ============================================================
+
+bindsym $mod+1 workspace 1
+bindsym $mod+2 workspace 2
+bindsym $mod+3 workspace 3
+bindsym $mod+4 workspace 4
+bindsym $mod+5 workspace 5
+bindsym $mod+6 workspace 6
+bindsym $mod+7 workspace 7
+bindsym $mod+8 workspace 8
+bindsym $mod+9 workspace 9
+bindsym $mod+0 workspace 10
+
+# ------------------------------------------------------------
+# Move Windows to Workspaces
+# ------------------------------------------------------------
+
+bindsym $mod+Shift+1 move container to workspace 1
+bindsym $mod+Shift+2 move container to workspace 2
+bindsym $mod+Shift+3 move container to workspace 3
+bindsym $mod+Shift+4 move container to workspace 4
+bindsym $mod+Shift+5 move container to workspace 5
+bindsym $mod+Shift+6 move container to workspace 6
+bindsym $mod+Shift+7 move container to workspace 7
+bindsym $mod+Shift+8 move container to workspace 8
+bindsym $mod+Shift+9 move container to workspace 9
+bindsym $mod+Shift+0 move container to workspace 10
+
+# ============================================================
+# Reload and Exit Sway
+# ============================================================
+
+bindsym $mod+Shift+r reload
+bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway?' -b 'Yes, exit sway' 'swaymsg exit'
+
+# ============================================================
+# Resize Mode
+# Super+R enters resize mode; Enter or Escape exits.
+# ============================================================
+
+mode "resize" {
+        bindsym j resize shrink width 10 px or 10 ppt
+        bindsym k resize grow height 10 px or 10 ppt
+        bindsym l resize shrink height 10 px or 10 ppt
+        bindsym semicolon resize grow width 10 px or 10 ppt
+        bindsym Left resize shrink width 10 px or 10 ppt
+        bindsym Down resize grow height 10 px or 10 ppt
+        bindsym Up resize shrink height 10 px or 10 ppt
+        bindsym Right resize grow width 10 px or 10 ppt
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+bindsym $mod+r mode "resize"

@@ -1,0 +1,15 @@
+@define-color cc-bg alpha(#15121a, 0.88);
+
+@define-color noti-border-color #a855f7;
+@define-color noti-bg #26222a;
+@define-color noti-bg-darker #110f16;
+@define-color noti-bg-hover #33273e;
+@define-color noti-bg-focus transparent;
+
+@define-color noti-close-bg alpha(#eae6ee, 0.10);
+@define-color noti-close-bg-hover alpha(#a855f7, 0.25);
+
+@define-color text-color #eae6ee;
+@define-color text-color-disabled #8b8096;
+
+@define-color bg-selected #a855f7;

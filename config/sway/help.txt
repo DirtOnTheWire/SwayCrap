@@ -1,0 +1,88 @@
+ SWAY DESKTOP — QUICK REFERENCE
+ ==================================================
+
+ GENERAL
+ --------------------------------------------------
+ Super + Q               System / program menu
+ Super + Shift + Q       Close focused window
+ Super + D               Dmenu launcher
+ Super + Z               Wofi launcher
+ Super + Enter           Foot terminal
+ Super + Shift + R       Reload Sway configuration
+ Super + Shift + E       Exit Sway (confirmation)
+ Super + F1              Show this manual
+
+ WINDOWS
+ --------------------------------------------------
+ Super + Arrows          Move focus
+ Super + J/K/L/;         Move focus (keyboard)
+ Super + Shift + Arrows  Move focused window
+ Super + Shift + J/K/L/; Move focused window
+ Super + F               Toggle fullscreen
+ Super + Shift + Space   Toggle floating
+ Super + Space           Switch tiling/floating focus
+ Super + R               Resize mode
+ Super + A               Focus parent container
+ Super + I               Hide window title bars
+ Super + O               Show window title bars
+ Super + G               Toggle window gaps
+
+ LAYOUT
+ --------------------------------------------------
+ Super + H               Horizontal split
+ Super + V               Vertical split
+ Super + S               Stacking layout
+ Super + W               Tabbed layout
+ Super + E               Toggle split layout
+
+ WORKSPACES
+ --------------------------------------------------
+ Super + 1–9, 0          Switch workspace 1–10
+ Super + Shift + 1–9, 0  Move window to workspace
+ Super + Ctrl + Arrows   Move workspace to another display
+
+ DESKTOP TOOLS
+ --------------------------------------------------
+ Super + T	         Theme picker
+ Super + N               Notification center
+ Super + M               Toggle Sway bar
+ Super + F9              Toggle XFCE panel
+ Super + Print           Screenshot menu
+                          1  Select area
+                          2  Active window
+                          3  Full screen
+
+ AUDIO / DISPLAY
+ --------------------------------------------------
+ Super + =               Volume up
+ Super + -               Volume down
+ Super + Backspace       Mute / unmute
+ Super + Mouse Wheel     Adjust volume
+ Volume keys             Adjust volume / mute
+ Brightness keys         Adjust screen brightness
+ Media keys              Play / pause / next / previous
+
+ SYSTEM MENU (Super + Q)
+ --------------------------------------------------
+ 1  General apps          1 Firefox
+                          2 Thunar
+                          3 Calculator
+                          4 Task Manager
+
+ 2  Games                 1 OBS Studio
+                          2 Steam
+
+ 3  Macros                Put your stuff here
+
+ 4  System                1 Synaptic
+                          2 XFCE Settings
+                          3 Display Settings
+
+ 9  Power                 5 Shutdown
+                          6 Restart
+                          7 Logout
+                          8 Suspend
+                          9 Lock
+
+ ==================================================
+ Press Q to close  |  Arrow keys to scroll

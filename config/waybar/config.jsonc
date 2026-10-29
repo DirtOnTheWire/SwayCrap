@@ -1,0 +1,372 @@
+[
+  {
+    "id": "main",
+    "layer": "top",
+    "position": "top",
+    "height": 30,
+    "spacing": 0,
+    "margin-top": 0,
+    "margin-left": 0,
+    "margin-right": 0,
+    "reload_style_on_change": true,
+    "gtk-layer-shell": true,
+    "icon-theme": "__ICON_THEME__",
+    "modules-left": [
+      "sway/workspaces",
+      "sway/mode",
+      "sway/window"
+    ],
+    "modules-center": [],
+    "modules-right": [
+      "group/gpu-pill",
+      "group/cpu-pill",
+      "group/sway-tray-pill",
+      "custom/stats-menu"
+    ],
+    "sway/mode": {
+      "format": "{}",
+      "min-length": 60
+    },
+    "custom/notifications": {
+      "tooltip": true,
+      "format": "{icon}",
+      "format-icons": {
+        "none": "",
+        "notification": "",
+        "dnd-none": "",
+        "dnd-notification": "",
+        "inhibited-none": "",
+        "inhibited-notification": "",
+        "dnd-inhibited-none": "",
+        "dnd-inhibited-notification": ""
+      },
+      "exec": "swaync-client -swb",
+      "return-type": "json",
+      "on-click": "swaync-client -t -sw",
+      "menu": "on-click-right",
+      "menu-file": "~/.config/waybar/menus/notifications.xml",
+      "menu-actions": {
+        "histui": "foot --app-id=histui -e histui"
+      },
+      "escape": true
+    },
+    "sway/workspaces": {
+      "disable-scroll": false,
+      "all-outputs": false,
+      "format": "{name}",
+      "format-icons": {
+        "urgent": "",
+        "focused": "{name}",
+        "default": "{name}"
+      }
+    },
+    "sway/window": {
+      "max-length": 80,
+      "separate-outputs": true
+    },
+    "pulseaudio": {
+      "format": "{icon}",
+      "format-bluetooth": "{icon}",
+      "format-muted": "",
+      "format-icons": {
+        "headphone": "",
+        "headset": "",
+        "hands-free": "",
+        "speaker": [
+          "",
+          "",
+          ""
+        ],
+        "default": [
+          "",
+          "",
+          ""
+        ]
+      },
+      "tooltip": true,
+      "tooltip-format": "Volume: {volume}%\n{desc}",
+      "scroll-step": 5,
+      "on-click": "pavucontrol",
+      "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle"
+    },
+    "custom/cava": {
+      "exec": "~/.config/waybar/scripts/cava-waybar.sh",
+      "restart-interval": 2,
+      "exec-on-event": false,
+      "tooltip": true,
+      "tooltip-format": "Audio visualizer",
+      "on-click": "/usr/bin/pavucontrol",
+      "on-click-right": "/usr/bin/pactl set-sink-mute @DEFAULT_SINK@ toggle",
+      "on-scroll-up": "/usr/bin/pactl set-sink-volume @DEFAULT_SINK@ +5%",
+      "on-scroll-down": "/usr/bin/pactl set-sink-volume @DEFAULT_SINK@ -5%"
+    },
+    "cava": {
+      "framerate": 20,
+      "autosens": 1,
+      "sensitivity": 100,
+      "bars": 5,
+      "lower_cutoff_freq": 60,
+      "higher_cutoff_freq": 12000,
+      "sleep_timer": 5,
+      "hide_on_silence": false,
+      "format_silent": "▁▁▁",
+      "method": "pipewire",
+      "source": "auto",
+      "stereo": false,
+      "reverse": false,
+      "bar_delimiter": 0,
+      "monstercat": false,
+      "waves": false,
+      "noise_reduction": 0.77,
+      "input_delay": 4,
+      "format-icons": [
+        "▁",
+        "▂",
+        "▃",
+        "▄",
+        "▅",
+        "▆",
+        "▇",
+        "█"
+      ]
+    },
+    "group/gpu-pill": {
+      "orientation": "horizontal",
+      "modules": [
+        "custom/gpu-usage",
+        "custom/gpu-core-clock",
+        "custom/gpu-vram-usage",
+        "custom/gpu-vram-clock",
+        "custom/gpu-power",
+        "custom/gpu-temp"
+      ]
+    },
+    "group/cpu-pill": {
+      "orientation": "horizontal",
+      "modules": [
+        "custom/cpu-history",
+        "custom/cpu-clock-avg",
+        "custom/cpu-clock-max",
+        "custom/cpu-temp",
+        "custom/memory-history"
+      ]
+    },
+    "custom/cpu-history": {
+      "exec": "bash ~/.config/waybar/scripts/stats-graph-toggle.sh cpu watch",
+      "return-type": "json",
+      "format": "{}",
+      "tooltip": true,
+      "on-click": "bash ~/.config/waybar/scripts/stats-graph-toggle.sh cpu toggle",
+      "exec-on-event": false,
+      "hide-empty-text": true
+    },
+    "custom/cpu-clock-avg": {
+      "exec": "bash ~/.config/waybar/scripts/stats-graph-toggle.sh cpu-clock-avg watch",
+      "return-type": "json",
+      "format": "{}",
+      "tooltip": true,
+      "on-click": "bash ~/.config/waybar/scripts/stats-graph-toggle.sh cpu-clock-avg toggle",
+      "exec-on-event": false,
+      "hide-empty-text": true
+    },
+    "custom/cpu-clock-max": {
+      "exec": "bash ~/.config/waybar/scripts/stats-graph-toggle.sh cpu-clock-max watch",
+      "return-type": "json",
+      "format": "{}",
+      "tooltip": true,
+      "on-click": "bash ~/.config/waybar/scripts/stats-graph-toggle.sh cpu-clock-max toggle",
+      "exec-on-event": false,
+      "hide-empty-text": true
+    },
+    "custom/memory-history": {
+      "exec": "bash ~/.config/waybar/scripts/stats-graph-toggle.sh memory watch",
+      "return-type": "json",
+      "format": "{}",
+      "tooltip": true,
+      "on-click": "bash ~/.config/waybar/scripts/stats-graph-toggle.sh memory toggle",
+      "exec-on-event": false,
+      "hide-empty-text": true
+    },
+    "cpu": {
+      "interval": 2,
+      "format": "CPU {icon} {usage:>3}%",
+      "format-icons": [
+        "▁",
+        "▂",
+        "▃",
+        "▄",
+        "▅",
+        "▆",
+        "▇",
+        "█"
+      ]
+    },
+    "memory": {
+      "interval": 2,
+      "format": "RAM {icon} {percentage:>3}%",
+      "format-icons": [
+        "▁",
+        "▂",
+        "▃",
+        "▄",
+        "▅",
+        "▆",
+        "▇",
+        "█"
+      ]
+    },
+    "temperature": {
+      "critical-threshold": 85,
+      "format": "TEMP {temperatureC}°C",
+      "format-critical": "TEMP {temperatureC}°C"
+    },
+    "clock": {
+      "interval": 1,
+      "format": "{:%a %b %d %I:%M %p}",
+      "tooltip": true,
+      "tooltip-format": "{:%A, %B %d, %Y}",
+      "on-click": "~/.config/waybar/scripts/calendar-popup.sh"
+    },
+    "group/sway-tray-pill": {
+      "orientation": "horizontal",
+      "modules": [
+        "pulseaudio",
+        "custom/cava",
+        "tray",
+        "battery",
+        "custom/notifications",
+        "clock"
+      ]
+    },
+    "tray": {
+      "icon-size": 14,
+      "spacing": 10
+    },
+    "group/battery-pill": {
+      "orientation": "horizontal",
+      "modules": [
+        "battery",
+        "custom/power-profile"
+      ]
+    },
+    "battery": {
+      "interval": 30,
+      "states": {
+        "warning": 30,
+        "critical": 15
+      },
+      "format": "{icon}",
+      "format-charging": " {icon}",
+      "format-plugged": "",
+      "format-full": "",
+      "format-warning": "{icon}",
+      "format-critical": "{icon}",
+      "format-icons": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "tooltip": true,
+      "tooltip-format": "Battery: {capacity}%\n{time}\nPower: {power} W",
+      "menu": "on-click",
+      "menu-file": "~/.config/waybar/menus/battery.xml",
+      "menu-actions": {
+        "power-settings": "xfce4-power-manager-settings",
+        "power-profile-performance": "powerprofilesctl set performance",
+        "power-profile-balanced": "powerprofilesctl set balanced",
+        "power-profile-saver": "powerprofilesctl set power-saver"
+      }
+    },
+    "custom/gpu-core-clock": {
+      "exec": "bash ~/.config/waybar/scripts/stats-graph-toggle.sh gpu-core-clock watch",
+      "return-type": "json",
+      "format": "{}",
+      "tooltip": true,
+      "on-click": "bash ~/.config/waybar/scripts/stats-graph-toggle.sh gpu-core-clock toggle",
+      "exec-on-event": false,
+      "hide-empty-text": true
+    },
+    "custom/gpu-vram-clock": {
+      "exec": "bash ~/.config/waybar/scripts/stats-graph-toggle.sh gpu-vram-clock watch",
+      "return-type": "json",
+      "format": "{}",
+      "tooltip": true,
+      "on-click": "bash ~/.config/waybar/scripts/stats-graph-toggle.sh gpu-vram-clock toggle",
+      "exec-on-event": false,
+      "hide-empty-text": true
+    },
+    "custom/gpu-vram-usage": {
+      "exec": "bash ~/.config/waybar/scripts/stats-graph-toggle.sh gpu-vram-usage watch",
+      "return-type": "json",
+      "format": "{}",
+      "tooltip": true,
+      "on-click": "bash ~/.config/waybar/scripts/stats-graph-toggle.sh gpu-vram-usage toggle",
+      "exec-on-event": false,
+      "hide-empty-text": true
+    },
+    "custom/gpu-power": {
+      "exec": "bash ~/.config/waybar/scripts/stats-graph-toggle.sh gpu-power watch",
+      "return-type": "json",
+      "format": "{}",
+      "tooltip": true,
+      "on-click": "bash ~/.config/waybar/scripts/stats-graph-toggle.sh gpu-power toggle",
+      "exec-on-event": false,
+      "hide-empty-text": true
+    },
+    "custom/gpu-temp": {
+      "exec": "bash ~/.config/waybar/scripts/stats-graph-toggle.sh gpu-temp watch",
+      "return-type": "json",
+      "format": "{}",
+      "tooltip": true,
+      "on-click": "bash ~/.config/waybar/scripts/stats-graph-toggle.sh gpu-temp toggle",
+      "exec-on-event": false,
+      "hide-empty-text": true
+    },
+    "custom/gpu-usage": {
+      "exec": "bash ~/.config/waybar/scripts/stats-graph-toggle.sh gpu-usage watch",
+      "return-type": "json",
+      "format": "{}",
+      "tooltip": true,
+      "on-click": "bash ~/.config/waybar/scripts/stats-graph-toggle.sh gpu-usage toggle",
+      "exec-on-event": false,
+      "hide-empty-text": true
+    },
+    "custom/cpu-temp": {
+      "exec": "bash ~/.config/waybar/scripts/stats-graph-toggle.sh cpu-temp watch",
+      "return-type": "json",
+      "format": "{}",
+      "tooltip": true,
+      "on-click": "bash ~/.config/waybar/scripts/stats-graph-toggle.sh cpu-temp toggle",
+      "exec-on-event": false,
+      "hide-empty-text": true
+    },
+    "group/gpu-combo": {
+      "orientation": "horizontal",
+      "modules": [
+        "custom/gpu-usage",
+        "custom/gpu-core-clock"
+      ]
+    },
+    "group/vram-combo": {
+      "orientation": "horizontal",
+      "modules": [
+        "custom/gpu-vram-usage",
+        "custom/gpu-vram-clock"
+      ]
+    },
+    "custom/stats-menu": {
+      "format": "",
+      "tooltip": true,
+      "tooltip-format": "Stats controls",
+      "menu": "on-click",
+      "menu-file": "~/.config/waybar/menus/stats-menu.xml",
+      "menu-actions": {
+        "toggle-cpu": "~/.config/waybar/scripts/stats-menu.sh cpu",
+        "toggle-gpu": "~/.config/waybar/scripts/stats-menu.sh gpu",
+        "toggle-graphs": "~/.config/waybar/scripts/stats-menu.sh graphs"
+      }
+    }
+  }
+]

@@ -1,0 +1,417 @@
+@import "colors.css";
+@import "stats-pill-visibility.css";
+
+* {
+  border: none;
+  border-radius: 0px;
+  font-family: monospace;
+  font-size: 12px;
+  min-height: 0px;
+}
+
+window#waybar {
+  background: @bg;
+  color: @fg;
+  border-top: 1px solid @accent;
+  border-bottom: 1px solid @accent;
+}
+
+#workspaces,
+#window,
+#cpu-pill,
+#memory {
+  background: @bg_alt;
+  color: @fg;
+  border: 1px solid @accent;
+  border-radius: 9px;
+  margin: 3px 3px;
+  padding: 3px 10px;
+}
+
+#clock {
+  background: @bg_alt;
+  color: @fg;
+  padding: 3px 5px;
+}
+
+/* Tiny audio spectrum, stupid ubuntu waybar build */
+#custom-cava {
+  background: @bg_alt;
+  color: @cyan;
+  padding: 3px 4px 3px 2px;
+  margin: 0;
+  font-family: monospace;
+  font-size: 12px;
+}
+
+/* Tiny audio spectrum after the volume icon */
+#cava {
+  background: @bg_alt;
+  color: @cyan;
+  padding: 3px 4px 3px 2px;
+  margin: 0;
+  font-family: monospace;
+  font-size: 12px;
+}
+
+#cava.silent {
+  color: @dim;
+}
+
+/* Volume icon before CAVA */
+#pulseaudio {
+  background: @bg_alt;
+  color: @fg;
+  /*border-right: 1px solid @accent;*/
+  padding: 2px 2px 2px 5px;
+
+  font-family: "Font Awesome 6 Free",
+               "Font Awesome 5 Free",
+               monospace;
+  font-weight: 900;
+  font-size: 16px;
+}
+
+#pulseaudio.muted,
+#pulseaudio.sink-muted {
+  color: @dim;
+}
+
+#tray {
+  background: @bg_alt;
+  color: @fg;
+  padding: 3px 5px;
+}
+
+#sway-tray-pill {
+  background: @bg_alt;
+  color: @fg;
+  border: 1px solid @accent;
+  border-radius: 9px;
+  margin: 3px 3px;
+  padding: 3px 5px;
+}
+
+#custom-cpu-clock-avg-spark,
+#custom-cpu-clock-max-spark,
+#custom-cpu-clock-avg,
+#custom-cpu-clock-max {
+  background: @bg_alt;
+  color: @fg;
+  border-right: 1px solid @accent;
+  padding: 0px 5px;
+  min-width: 5.5em;
+}
+
+/* Battery / power menu */
+#battery {
+  background: @bg_alt;
+  color: @fg;
+  padding: 0px 5px;
+
+  font-family: "Font Awesome 6 Free",
+               "Font Awesome 5 Free",
+               monospace;
+  font-weight: 900;
+}
+
+/* 30% and below */
+#battery.discharging.warning {
+  color: #f59e0b;
+}
+
+#battery.discharging {
+  color: @cyan;
+}
+
+/* 15% and below */
+#battery.discharging.critical {
+  color: @urgent;
+}
+
+/* AC / charging */
+#battery.charging,
+#battery.plugged {
+  color: @accent;
+}
+
+/* Fully charged */
+#battery.full {
+  color: @fg;
+}
+
+/* Notification bell states from swaync-client -swb / Waybar custom module */
+#custom-notifications {
+  background: @bg_alt;
+  color: @dim;
+  padding: 3px 5px;
+
+  font-family: "Font Awesome 6 Free",
+               monospace;
+}
+
+#custom-notifications.none,
+#custom-notifications.dnd-none,
+#custom-notifications.dnd-inhibited-none,
+#custom-notifications.inhibited-none {
+  color: @dim;
+  border-color: @accent;
+}
+
+#custom-notifications.notification,
+#custom-notifications.inhibited-notification {
+  color: #ff0000;
+  border-color: #ff0000;
+}
+
+#custom-notifications.dnd-notification,
+#custom-notifications.dnd-inhibited-notification {
+  color: #ff0000;
+  border-color: #ff0000;
+}
+
+#custom-notifications.critical,
+#custom-notifications.notification-critical,
+#custom-notifications.dnd-notification-critical {
+  color: @urgent;
+  border-color: @urgent;
+}
+
+#cpu-pill {
+  background: @bg_alt;
+  color: @fg;
+  border: 1px solid @accent;
+  border-radius: 9px;
+  margin: 3px 3px;
+  padding: 3px 5px;
+}
+
+#custom-cpu-history {
+  background: @bg_alt;
+  color: @fg;
+  border-right: 1px solid @accent;
+  padding: 0px 5px;
+}
+
+#custom-memory-history {
+  background: @bg_alt;
+  color: @fg;
+  padding: 3px 10px;
+}
+
+#cpu {
+  background: @bg_alt;
+  color: @fg;
+  border-right: 1px solid @accent;
+  padding: 0px 5px;
+}
+
+#temperature {
+  background: @bg_alt;
+  color: @fg;
+  border-right: 1px solid @accent;
+  padding: 0px 5px;
+  min-width: 5.5em;
+}
+
+#gpu-pill {
+  background: @bg_alt;
+  color: @fg;
+  border: 1px solid @accent;
+  border-radius: 9px;
+  margin: 3px 3px;
+  padding: 3px 5px;
+}
+
+#custom-gpu-core-clock,
+#custom-gpu-vram-clock,
+#custom-gpu-vram-usage {
+  border-right: 1px solid @accent;
+  background: @bg_alt;
+  color: @fg;
+  padding: 0px 5px;
+}
+
+#custom-gpu-power {
+  border-right: 1px solid @accent;
+  background: @bg_alt;
+  color: @fg;
+  padding: 0px 5px;
+}
+
+#custom-gpu-temp {
+  border-right: 1px solid @accent;
+  background: @bg_alt;
+  color: @fg;
+  padding: 0px 5px;
+}
+
+#custom-gpu-usage {
+  background: @bg_alt;
+  color: @fg;
+  padding: 0px 5px;
+}
+
+#workspaces {
+  margin-left: 6px;
+  padding: 0px 4px;
+}
+
+#workspaces button {
+  color: @dim;
+  background: transparent;
+  padding: 0px 8px;
+  margin: 0px 2px;
+}
+
+#workspaces button.focused {
+  color: @fg;
+  background: @bg_alt;
+  box-shadow: inset 0px -2px @cyan;
+}
+
+#workspaces button.visible {
+  color: @fg;
+}
+
+#workspaces button.urgent {
+  color: @fg;
+  background: @urgent;
+}
+
+#window {
+  margin-right: 8px;
+}
+
+#temperature.critical {
+  color: @urgent;
+}
+/* Consistent separators and padding for the clickable stats pills. */
+#custom-cpu-history,
+#custom-cpu-clock-avg,
+#custom-cpu-clock-max,
+#custom-cpu-temp,
+#custom-memory-history,
+#custom-gpu-core-clock,
+#custom-gpu-vram-clock,
+#custom-gpu-power,
+#custom-gpu-temp,
+#custom-gpu-usage {
+  background: @bg_alt;
+  color: @fg;
+  padding: 0px 6px;
+  min-width: 0px;
+  border: none;
+  border-radius: 0px;
+}
+
+/* All except the final stat in each pill have a divider. */
+#custom-cpu-history,
+#custom-cpu-clock-avg,
+#custom-cpu-clock-max,
+#custom-cpu-temp,
+#custom-gpu-core-clock,
+#custom-gpu-vram-clock,
+#custom-gpu-power,
+#custom-gpu-temp {
+  border-right: 1px solid @accent;
+}
+
+/* Compact GPU segments: GPU + CORE | VRAM + CLK | PWR | TEMP.
+   Each inner module retains its own click handler and graph preference. */
+#gpu-combo, #vram-combo {
+  background: @bg_alt;
+  padding: 0;
+  margin: 0;
+  border: none;
+}
+#custom-gpu-usage,
+#custom-gpu-vram-usage {
+  padding: 0px 2px 0px 4px;
+  border: none;
+}
+#custom-gpu-core-clock,
+#custom-gpu-vram-clock {
+  padding: 0px 5px 0px 2px;
+  border-right: 1px solid @accent;
+}
+#custom-gpu-power {
+  border-right: 1px solid @accent;
+}
+#custom-gpu-temp {
+  border-right: none;
+}
+
+/* Each GPU reading gets its own segment; no nested combo groups. */
+#custom-gpu-usage,
+#custom-gpu-core-clock,
+#custom-gpu-vram-usage,
+#custom-gpu-vram-clock,
+#custom-gpu-power,
+#custom-gpu-temp {
+  background: @bg_alt;
+  color: @fg;
+  padding: 0px 5px;
+  min-width: 0;
+  border: none;
+  border-radius: 0;
+}
+#custom-gpu-usage,
+#custom-gpu-core-clock,
+#custom-gpu-vram-usage,
+#custom-gpu-vram-clock,
+#custom-gpu-power {
+  border-right: 1px solid @accent;
+}
+
+/* CPU/GPU: softly alternating, rounded stat tiles inside each pill.
+   Keep the outer 9px pill border and the original comfortable spacing. */
+#cpu-pill,
+#gpu-pill {
+  padding: 3px 4px;
+}
+
+#custom-cpu-history,
+#custom-cpu-clock-avg,
+#custom-cpu-clock-max,
+#custom-cpu-temp,
+#custom-memory-history,
+#custom-gpu-usage,
+#custom-gpu-core-clock,
+#custom-gpu-vram-usage,
+#custom-gpu-vram-clock,
+#custom-gpu-power,
+#custom-gpu-temp {
+  background: @bg_alt;
+  color: @fg;
+  border: none;
+  border-radius: 6px;
+  margin: 0 1px;
+  padding: 0 5px;
+  min-width: 0;
+}
+
+/* Alternate tiles: subtle theme-blue tint, no pipe separators. */
+#custom-cpu-history,
+#custom-cpu-clock-max,
+#custom-memory-history,
+#custom-gpu-usage,
+#custom-gpu-vram-usage,
+#custom-gpu-power {
+  background: alpha(@accent, 0.12);
+}
+
+/* Stats hamburger: blue outlined standalone pill just before the Sway tray. */
+#custom-stats-menu {
+  background: @bg_alt;
+  color: @cyan;
+  border: 1px solid @accent;
+  border-radius: 9px;
+  margin: 3px;
+  padding: 3px 9px;
+  font-family: "Font Awesome 6 Free", monospace;
+  font-size: 13px;
+}
+#custom-stats-menu:hover {
+  background: alpha(@accent, 0.16);
+}

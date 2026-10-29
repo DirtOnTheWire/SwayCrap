@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <object class="GtkMenu" id="menu">
+    <child>
+      <object class="GtkMenuItem" id="toggle-cpu">
+        <property name="label">Show / hide CPU pill</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="toggle-gpu">
+        <property name="label">Show / hide GPU pill</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="toggle-graphs">
+        <property name="label">Show / hide all graphs</property>
+      </object>
+    </child>
+  </object>
+</interface>
