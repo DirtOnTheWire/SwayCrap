@@ -1,5 +1,5 @@
 # SwayCrap
-Sway dot files that just works
+Sway dotfiles that just works
 
 # Xubuntu + Sway Desktop
 
@@ -71,8 +71,8 @@ The repository is arranged to match your home directory: `.config/` contains the
 ### Download the repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
-cd YOUR_REPOSITORY
+git clone https://github.com/DirtOnTheWire/SwayCrap.git
+cd SwayCrap
 ```
 
 Replace the example URL and directory with your actual repository name.
