@@ -9,6 +9,8 @@ The goal is a tiling traditional desktop environment that just works. The regula
 
 <!-- Add screenshots here, e.g. ![Desktop](screenshots/desktop.png) -->
 
+![Desktop](screenshots/terminal.png)
+
 ## Features
 
 - Sway Wayland compositor with XWayland compatibility
