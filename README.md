@@ -7,8 +7,6 @@ A customized Sway desktop built on Xubuntu, combining tiling window management w
 
 The goal is a tiling traditional desktop environment that just works. The regular XFCE session remains available as an alternative.
 
-<!-- Add screenshots here, e.g. ![Desktop](screenshots/desktop.png) -->
-
 ![Desktop](Screenshots/terminals.png)
 
 ## Features
@@ -84,8 +82,7 @@ Replace the example URL and directory with your actual repository name.
 **Back up any existing settings before copying.** Matching files in your home directory may be overwritten.
 
 ```bash
-mkdir -p "$HOME/.config" "$HOME/Pictures"
-cp -a .config/. "$HOME/.config/"
+cp -a config/. "$HOME/.config/"
 cp -a Pictures/. "$HOME/Pictures/"
 ```
 
