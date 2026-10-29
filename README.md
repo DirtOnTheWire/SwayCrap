@@ -9,7 +9,7 @@ The goal is a tiling traditional desktop environment that just works. The regula
 
 <!-- Add screenshots here, e.g. ![Desktop](screenshots/desktop.png) -->
 
-![Desktop](Screenshots/terminal.png)
+![Desktop](Screenshots/terminals.png)
 
 ## Features
 
