@@ -12,8 +12,10 @@
 window#waybar {
   background: @bg;
   color: @fg;
-  border-top: 1px solid @accent;
-  border-bottom: 1px solid @accent;
+/*  border-top: 1px solid @accent;
+  border-bottom: 1px solid @accent; */
+  border-top: none;
+  border-bottom: none;
 }
 
 #workspaces,
@@ -414,4 +416,41 @@ window#waybar {
 }
 #custom-stats-menu:hover {
   background: alpha(@accent, 0.16);
+}
+
+/* SwayCrap local test: a single rounded frame instead of pill outlines.
+   Uses colors.css, so the frame follows the selected theme.
+   Keep the inner stat tile colors and click targets unchanged. */
+window#waybar {
+  background: @bg;
+  border: 1px solid @accent;
+  border-radius: 12px;
+}
+
+/* Pill outlines (easy toggle):
+   Current look: border: none; keeps only the rounded outer Waybar frame.
+   To restore the individual pill outlines, comment out `border: none;`
+   and uncomment `border: 1px solid @accent;` in the rule below.
+   This rule intentionally overrides the earlier pill border settings.
+   The internal stats dividers remain unchanged. */
+#workspaces,
+#window,
+#cpu-pill,
+#memory,
+#gpu-pill,
+#sway-tray-pill,
+#custom-stats-menu {
+  border: none;                    /* Current: no pill outlines */
+  /* border: 1px solid @accent; */ /* Optional: outlined pills */
+}
+
+/* Keep soft rounding and backgrounds, without outlines. */
+#workspaces,
+#window,
+#cpu-pill,
+#memory,
+#gpu-pill,
+#sway-tray-pill,
+#custom-stats-menu {
+  border-radius: 9px;
 }
