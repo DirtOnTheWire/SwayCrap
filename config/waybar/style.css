@@ -454,3 +454,14 @@ window#waybar {
 #custom-stats-menu {
   border-radius: 9px;
 }
+
+/* Sway modes — resize, etc. */
+#mode {
+    background: @bg_alt;
+    color: @urgent;
+    /*border: 1px solid @urgent;*/
+    border-radius: 9px;
+    margin: 3px;
+    padding: 3px 10px;
+    font-weight: bold;
+}
