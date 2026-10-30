@@ -13,6 +13,16 @@ SwayCrap combines Sway with familiar XFCE utilities and lightweight, independent
 
 The idea is to keep the desktop simple, flexible, and easy to maintain—not necessarily to have the fewest packages installed.
 
+### Interactive Waybar system monitors
+
+The Waybar system-monitoring pills are clickable. Click a supported CPU, RAM, or GPU indicator to expand its graphs and detailed statistics, while keeping the bar itself compact. Available graphs depend on your hardware and installed tools.
+
+![Expanded Waybar system monitoring graphs](Screenshots/waybar-graphs1.png)
+
+![Collapsed Waybar system monitoring graphs](Screenshots/waybar-graphs2.png)
+
+*Click a supported Waybar pill to open its expanded monitoring graphs.*
+
 ![Desktop](Screenshots/terminals.png)
 
 ## Features
