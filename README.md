@@ -23,6 +23,12 @@ The Waybar system-monitoring pills are clickable. Click a supported CPU, RAM, or
 
 *Click a supported Waybar pill to open its expanded monitoring graphs.*
 
+
+### Terminal and text editor color generation
+
+Enabling the terminal and text editor colors auto generates a color scheme with cursed math rotating colors around the color wheel, it works with any accent color.
+Instructions to turn that feature on are in section 7.
+
 ![Desktop](Screenshots/terminals.png)
 
 ## Features
