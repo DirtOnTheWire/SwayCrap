@@ -49,7 +49,7 @@ input "type:pointer" {
 input "type:keyboard" {
     xkb_layout us
     xkb_variant ""
-    xkb_options ctrl:nocaps
+    #xkb_options ctrl:nocaps
     xkb_numlock enabled
     repeat_delay 300
     repeat_rate 40
