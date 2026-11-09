@@ -3,19 +3,40 @@
 include ~/.config/sway/themes/current.conf
 
 
-# Rounded windows
+## ============================================================
+## SwayFX "FX", just delete one "#" off of each line to activate
+## ============================================================
+
+## SwayFX accent glow fallback
+##Softer
+#set $swayfx_glow #6CA6D988
+##Brighter
+#set $swayfx_glow #6CA6D9CC
+
+## Load generated theme variables
+#include ~/.config/sway/themes/current.conf
+
+## ------------------------------------------------------------
+## SwayFX - Rounded Corners + Accent Edge Glow
+## ------------------------------------------------------------
+
 #corner_radius 8
 
-# Soft drop shadows
 #shadows enable
 #shadows_on_csd enable
+
 #shadow_blur_radius 28
-#shadow_color #000000B8
-#shadow_inactive_color #000000B8
+#shadow_color $sway_color4CC
+#shadow_inactive_color #00000038
 #shadow_offset 0 6
 
-# Fast, subtle motion
+## Fast, subtle motion
 #animation_duration_ms 150
+
+## ============================================================
+## SwayFX "FX" end
+## ============================================================
+
 
 
 # All regular mice / external pointer devices
@@ -861,20 +882,37 @@ bindsym $mod+Shift+r reload
 bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway?' -b 'Yes, exit sway' 'swaymsg exit'
 
 # ============================================================
-# Resize Mode
-# Super+R enters resize mode; Enter or Escape exits.
+# Resize Mode - Manual + Aspect Ratios
+# Super+R enters resize mode.
 # ============================================================
 
-mode "resize" {
-        bindsym j resize shrink width 10 px or 10 ppt
-        bindsym k resize grow height 10 px or 10 ppt
-        bindsym l resize shrink height 10 px or 10 ppt
-        bindsym semicolon resize grow width 10 px or 10 ppt
-        bindsym Left resize shrink width 10 px or 10 ppt
-        bindsym Down resize grow height 10 px or 10 ppt
-        bindsym Up resize shrink height 10 px or 10 ppt
-        bindsym Right resize grow width 10 px or 10 ppt
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
+set $resize (1) 16:9, (2) 4:3, (3) Equal, (4) Float, (5) Arrows, (6) Esc
+
+mode "$resize" {
+    # Manual resizing (existing keybinds)
+    bindsym j resize shrink width 10 px or 10 ppt
+    bindsym k resize grow height 10 px or 10 ppt
+    bindsym l resize shrink height 10 px or 10 ppt
+    bindsym semicolon resize grow width 10 px or 10 ppt
+
+    bindsym Left resize shrink width 10 px or 10 ppt
+    bindsym Down resize grow height 10 px or 10 ppt
+    bindsym Up resize shrink height 10 px or 10 ppt
+    bindsym Right resize grow width 10 px or 10 ppt
+
+    # Aspect ratio presets
+    bindsym 1 exec bash ~/.config/sway/scripts/aspect-resize.sh 16:9
+    bindsym 2 exec bash ~/.config/sway/scripts/aspect-resize.sh 4:3
+
+    # Restore even-sized columns
+    bindsym 3 exec bash ~/.config/sway/scripts/aspect-resize.sh equal
+
+    # Toggle focused window floating/tiling
+    bindsym 4 floating toggle
+
+    # Exit resize mode
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
 }
-bindsym $mod+r mode "resize"
+
+bindsym $mod+r mode "$resize"

@@ -3,12 +3,14 @@
 
 # SwayCrap Aspect Ratio Resize
 #
-# 16:9  - Resize focused window to widescreen
-# 4:3   - Resize focused window to classic ratio
-# equal - Equalize horizontal sibling containers
+# 16:9  - Widescreen application content
+# 4:3   - Classic application content
+# equal - Equalize horizontal tiled containers
 #
-# Floating windows: resize width + height, center.
-# Tiled windows: resize column width only.
+# Floating: resize both dimensions and center.
+# Tiled: adjust width using application content height.
+#
+# Compatible with Sway and SwayFX.
 
 set -euo pipefail
 
@@ -31,16 +33,26 @@ case "$MODE" in
         ;;
 esac
 
-# Read the Sway layout tree.
-TREE=$(swaymsg -t get_tree)
+# ------------------------------------------------------------
+# Find focused window
+# ------------------------------------------------------------
 
-# Find the currently focused window.
+TREE=$(swaymsg -t get_tree -r)
+
+# IMPORTANT:
+# Search both tiled nodes and floating nodes.
+
+# Find focused tiled OR floating window.
 WINDOW=$(jq -c '
-    [
-        recurse(.nodes[]?, .floating_nodes[]?)
-        | select(.focused == true and .type == "con")
-    ] | first // empty
+    first(
+        recurse((.nodes[]?, .floating_nodes[]?))
+        | select(
+            .focused == true and
+            (.type == "con" or .type == "floating_con")
+        )
+    ) // empty
 ' <<< "$TREE")
+
 
 if [[ -z "$WINDOW" ]]; then
     echo "No focused window found" >&2
@@ -48,36 +60,34 @@ if [[ -z "$WINDOW" ]]; then
 fi
 
 ID=$(jq -r '.id' <<< "$WINDOW")
-FLOATING=$(jq -r '.floating' <<< "$WINDOW")
+FLOATING=$(jq -r '.floating // "auto_off"' <<< "$WINDOW")
 
-# Find the immediate parent container.
+# Find the immediate tiled parent.
 PARENT=$(jq -c --argjson id "$ID" '
-    [
-        recurse(.nodes[]?, .floating_nodes[]?)
+    first(
+        recurse((.nodes[]?, .floating_nodes[]?))
         | select(
-            .nodes? and
-            ([.nodes[].id] | index($id))
+            [.nodes[]?.id] | index($id)
         )
-    ] | last // empty
+    ) // empty
 ' <<< "$TREE")
 
 # ------------------------------------------------------------
-# Equal spacing
+# Equal spacing (tiled only)
 # ------------------------------------------------------------
 
 if [[ "$MODE" == "equal" ]]; then
-    # Floating windows cannot share tiled columns.
-    if [[ "$FLOATING" != "user_off" &&
-          "$FLOATING" != "auto_off" ]]; then
+
+    if [[ "$FLOATING" == "user_on" ||
+          "$FLOATING" == "auto_on" ]]; then
         echo "Equal spacing requires a tiled window" >&2
         exit 1
     fi
 
-    # Only equalize siblings in a horizontal split.
     LAYOUT=$(jq -r '.layout // ""' <<< "$PARENT")
 
     if [[ "$LAYOUT" != "splith" ]]; then
-        echo "Focused window is not in a horizontal split" >&2
+        echo "Requires a horizontal split" >&2
         exit 1
     fi
 
@@ -87,14 +97,9 @@ if [[ "$MODE" == "equal" ]]; then
         exit 0
     fi
 
-    # Average the existing column widths.
-    TOTAL=$(jq '
-        [.nodes[].rect.width] | add
-    ' <<< "$PARENT")
-
+    TOTAL=$(jq '[.nodes[].rect.width] | add' <<< "$PARENT")
     TARGET=$(( TOTAL / COUNT ))
 
-    # Adjust each sibling without changing focus.
     while read -r SIBLING; do
         swaymsg -q \
             "[con_id=$SIBLING] resize set width $TARGET px"
@@ -104,35 +109,67 @@ if [[ "$MODE" == "equal" ]]; then
 fi
 
 # ------------------------------------------------------------
-# Floating window
+# Read application geometry
+# ------------------------------------------------------------
+
+CURRENT_WIDTH=$(jq -r '.rect.width' <<< "$WINDOW")
+CURRENT_HEIGHT=$(jq -r '.rect.height' <<< "$WINDOW")
+
+CONTENT_WIDTH=$(jq -r '.window_rect.width' <<< "$WINDOW")
+CONTENT_HEIGHT=$(jq -r '.window_rect.height' <<< "$WINDOW")
+
+# Borders and titlebar overhead.
+EXTRA_WIDTH=$(( CURRENT_WIDTH - CONTENT_WIDTH ))
+EXTRA_HEIGHT=$(( CURRENT_HEIGHT - CONTENT_HEIGHT ))
+
+# ------------------------------------------------------------
+# Floating windows
 # ------------------------------------------------------------
 
 if [[ "$FLOATING" == "user_on" ||
       "$FLOATING" == "auto_on" ]]; then
 
-    # Get the dimensions of the focused workspace.
-    WORKSPACE=$(swaymsg -t get_workspaces |
-        jq -c '.[] | select(.focused == true)')
+    # Get current workspace dimensions.
+    WORKSPACE=$(swaymsg -t get_workspaces -r |
+        jq -c 'first(.[] | select(.focused == true))')
 
     OW=$(jq -r '.rect.width' <<< "$WORKSPACE")
     OH=$(jq -r '.rect.height' <<< "$WORKSPACE")
 
-    # Start at 80% of the available screen height.
-    HEIGHT=$(( OH * 80 / 100 ))
+    # Leave room around the floating window.
+    MAX_WIDTH=$(( OW - EXTRA_WIDTH ))
+    MAX_HEIGHT=$(( OH - EXTRA_HEIGHT ))
+
+    # Fill the available workspace height.
+    HEIGHT=$(( OH - EXTRA_HEIGHT ))
     WIDTH=$(( HEIGHT * NUM / DEN ))
 
-    # Avoid excessive width on narrower screens.
-    MAX_WIDTH=$(( OW * 85 / 100 ))
-
+    # Restrict width to available space.
     if (( WIDTH > MAX_WIDTH )); then
         WIDTH=$MAX_WIDTH
         HEIGHT=$(( WIDTH * DEN / NUM ))
     fi
 
-    # Resize and center the floating window.
+    # Restrict height if necessary.
+    if (( HEIGHT > MAX_HEIGHT )); then
+        HEIGHT=$MAX_HEIGHT
+        WIDTH=$(( HEIGHT * NUM / DEN ))
+    fi
+
+    if (( WIDTH < 1 || HEIGHT < 1 )); then
+        echo "Workspace too small" >&2
+        exit 1
+    fi
+
+    # Convert content dimensions back to window dimensions.
+    WIDTH=$(( WIDTH + EXTRA_WIDTH ))
+    HEIGHT=$(( HEIGHT + EXTRA_HEIGHT ))
+
+    # Resize floating window.
     swaymsg -q \
         "[con_id=$ID] resize set width $WIDTH px height $HEIGHT px"
 
+    # Center floating window.
     swaymsg -q \
         "[con_id=$ID] move position center"
 
@@ -140,31 +177,24 @@ if [[ "$FLOATING" == "user_on" ||
 fi
 
 # ------------------------------------------------------------
-# Tiled window
+# Tiled windows
 # ------------------------------------------------------------
 
-# Aspect presets work on horizontal tiled columns.
 LAYOUT=$(jq -r '.layout // ""' <<< "$PARENT")
 
 if [[ "$LAYOUT" != "splith" ]]; then
-    echo "Aspect preset requires a horizontal split" >&2
+    echo "Aspect preset requires horizontal split" >&2
     exit 1
 fi
 
+# Calculate width using actual application height.
+HEIGHT=$CONTENT_HEIGHT
+TARGET_CONTENT_WIDTH=$(( HEIGHT * NUM / DEN ))
 
-# Use actual application content height
-HEIGHT=$(jq -r '.window_rect.height' <<< "$WINDOW")
+# Add border overhead.
+WIDTH=$(( TARGET_CONTENT_WIDTH + EXTRA_WIDTH ))
 
-# Calculate desired application content width
-CONTENT_WIDTH=$(( HEIGHT * NUM / DEN ))
-
-# Account for borders and decorations
-CURRENT_WIDTH=$(jq -r '.rect.width' <<< "$WINDOW")
-CURRENT_CONTENT_WIDTH=$(jq -r '.window_rect.width' <<< "$WINDOW")
-
-WIDTH=$(( CONTENT_WIDTH + CURRENT_WIDTH - CURRENT_CONTENT_WIDTH ))
-
-# Reserve room for neighboring columns
+# Leave space for neighboring tiled windows.
 PARENT_WIDTH=$(jq -r '.rect.width' <<< "$PARENT")
 MAX_WIDTH=$(( PARENT_WIDTH * 85 / 100 ))
 
@@ -172,8 +202,11 @@ if (( WIDTH > MAX_WIDTH )); then
     WIDTH=$MAX_WIDTH
 fi
 
-# Resize the focused tiled column
+if (( WIDTH < 1 )); then
+    echo "Invalid target width" >&2
+    exit 1
+fi
+
+# Resize tiled column.
 swaymsg -q \
     "[con_id=$ID] resize set width $WIDTH px"
-
-
