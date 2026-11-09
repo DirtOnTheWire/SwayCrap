@@ -886,7 +886,7 @@ bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. 
 # Super+R enters resize mode.
 # ============================================================
 
-set $resize (1) 16:9, (2) 4:3, (3) Equal, (4) Float, (5) Arrows, (6) Esc
+set $resize (1) 16:9, (2) 4:3, (3) Equal, (4) Float
 
 mode "$resize" {
     # Manual resizing (existing keybinds)
